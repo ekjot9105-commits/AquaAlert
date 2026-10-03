@@ -1,0 +1,14 @@
+{
+  "name": "aquaalert",
+  "version": "1.0.0",
+  "description": "AquaAlert AI monorepo",
+  "scripts": {
+    "install:all": "npm install && cd web && npm install && cd ../api && python -m venv venv && .\\venv\\Scripts\\pip install -r requirements.txt",
+    "dev:web": "cd web && npm run dev",
+    "dev:api": "cd api && .\\venv\\Scripts\\uvicorn app.main:app --reload --port 8000",
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:api\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

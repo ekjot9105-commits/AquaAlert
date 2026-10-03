@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+sqlmodel
+pydantic-settings
+python-multipart
+aiofiles
+Pillow

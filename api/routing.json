@@ -1,0 +1,28 @@
+{
+  "mappings": [
+    {
+      "water_body_id": 1,
+      "response_unit_id": 1
+    },
+    {
+      "water_body_id": 2,
+      "response_unit_id": 2
+    },
+    {
+      "water_body_id": 3,
+      "response_unit_id": 1
+    },
+    {
+      "water_body_id": 4,
+      "response_unit_id": 3
+    },
+    {
+      "water_body_id": 5,
+      "response_unit_id": 2
+    },
+    {
+      "water_body_id": 6,
+      "response_unit_id": 3
+    }
+  ]
+}

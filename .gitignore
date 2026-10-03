@@ -1,0 +1,6 @@
+node_modules/
+.env
+api/venv/
+api/__pycache__/
+api/database.db
+.pytest_cache/
