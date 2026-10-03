@@ -1,0 +1,7 @@
+import { Flame, Sparkles } from 'lucide-react';
+
+type UserProgress = { name: string; level: number; xp: number; current_threshold: number; next_threshold: number; next_name: string; streak: number };
+export function XpHud({ user, celebrate = false }: { user: UserProgress; celebrate?: boolean }) {
+  const progress = Math.min(100, Math.round(((user.xp - user.current_threshold) / Math.max(1, user.next_threshold - user.current_threshold)) * 100));
+  return <div className={`relative rounded-2xl border border-glow-aqua/25 bg-deep-teal/60 p-4 ${celebrate ? 'animate-pulse' : ''}`}><div className="flex items-center justify-between gap-3"><div><p className="text-xs uppercase tracking-widest text-glow-aqua">Level {user.level}</p><h2 className="text-xl font-bold">{user.name}</h2></div><div className="flex items-center gap-1 text-watch-amber"><Flame size={20} fill="currentColor" /><span className="font-bold">{user.streak}</span></div></div><div className="mt-4 flex justify-between text-xs text-white/60"><span>{user.xp} XP</span><span>{user.next_threshold} XP · {user.next_name}</span></div><div className="mt-1 h-2 overflow-hidden rounded-full bg-black/30"><div className="h-full rounded-full bg-gradient-to-r from-glow-aqua to-health-lime transition-all duration-700" style={{ width: `${progress}%` }} /></div>{celebrate && <p className="mt-3 text-sm font-semibold text-glow-aqua"><Sparkles size={14} className="inline mr-1" />Level progress unlocked!</p>}</div>;
+}

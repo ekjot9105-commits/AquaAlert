@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { cn } from '../utils/cn';
+import { useState, type ReactNode } from 'react';
 
-export const Tooltip = ({ children, content }: { children: React.ReactNode, content: React.ReactNode }) => {
+export const Tooltip = ({ children, content }: { children: ReactNode, content: ReactNode }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   return (

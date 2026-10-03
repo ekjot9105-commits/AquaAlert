@@ -1,0 +1,10 @@
+{
+  "cities": [
+    {
+      "id": "hyderabad",
+      "name": "Hyderabad",
+      "center": { "lat": 17.385, "lng": 78.4867 },
+      "routing": { "default_unit": "Hyderabad Water Response" }
+    }
+  ]
+}

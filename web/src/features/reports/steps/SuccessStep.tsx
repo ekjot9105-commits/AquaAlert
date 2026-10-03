@@ -1,45 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../../../ui/Button';
-import { ReportDraft } from '../ReportWizard';
+import type { ReportDraft } from '../ReportWizard';
 import { submitReport } from '../../../services/api';
 import { motion } from 'framer-motion';
 import { Check, CheckCircle2, Circle, Navigation } from 'lucide-react';
-import { useAuthStore } from '../../../store/authStore';
 import { useNavigate } from 'react-router-dom';
+import { enqueueRequest } from '../../../services/offlineQueue';
 
 interface Props {
   draft: ReportDraft;
   onReset: () => void;
 }
 
-export const SuccessStep: React.FC<Props> = ({ draft, onReset }) => {
+export const SuccessStep = ({ draft, onReset }: Props) => {
   const [status, setStatus] = useState<'submitting' | 'success' | 'error'>('submitting');
   const [reportId, setReportId] = useState<number | null>(null);
-  const { role } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Only submit if we haven't already
     const submit = async () => {
+      const payload = {
+        user_id: 1,
+        water_body_id: draft.waterBodyId,
+        lat: draft.lat,
+        lng: draft.lng,
+        description: draft.description,
+        issue_type: draft.issueType,
+        evidence_b64: draft.evidenceB64,
+        evidence_url: "https://placehold.co/600x400/004d00/FFF?text=Demo+Upload",
+        ai_result_json: JSON.stringify(draft.aiResult),
+        ai_confidence: draft.aiResult?.overall_confidence || 0,
+        ai_priority: draft.aiResult?.priority_suggestion || "Low",
+      };
       try {
-        const payload = {
-          user_id: 1, // Mock citizen ID
-          water_body_id: draft.waterBodyId,
-          lat: draft.lat,
-          lng: draft.lng,
-          description: draft.description,
-          issue_type: draft.issueType,
-          evidence_b64: draft.evidenceB64,
-          evidence_url: "https://placehold.co/600x400/004d00/FFF?text=Demo+Upload", // Mock upload URL
-          ai_result_json: JSON.stringify(draft.aiResult),
-          ai_confidence: draft.aiResult?.overall_confidence || 0,
-          ai_priority: draft.aiResult?.priority_suggestion || "Low",
-        };
         const res = await submitReport(payload);
         setReportId(res.id);
         setStatus('success');
       } catch (e) {
         console.error(e);
+        if (!navigator.onLine) {
+          await enqueueRequest('http://localhost:8000/reports', payload);
+          setStatus('success');
+          return;
+        }
         setStatus('error');
       }
     };

@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { GlassPanel } from '../../ui/GlassPanel';
-import { PriorityBadge } from '../../ui/PriorityBadge';
-import { StatusBadge } from '../../ui/StatusBadge';
-import { Button } from '../../ui/Button';
+import { GlassPanel } from '../ui/GlassPanel';
+import { PriorityBadge } from '../ui/PriorityBadge';
+import { StatusBadge } from '../ui/StatusBadge';
 import { ArrowLeft, Activity, ShieldCheck, MapPin } from 'lucide-react';
-import { useAuthStore } from '../../store/authStore';
 
 export const ReportDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [report, setReport] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     // Fetch report from API
@@ -26,6 +25,36 @@ export const ReportDetail = () => {
 
   if (loading) return <div className="p-8 text-center animate-pulse">Loading case data...</div>;
   if (!report) return <div className="p-8 text-center text-alert-coral">Report not found.</div>;
+  const downloadFhir = async () => {
+    setExporting(true);
+    try {
+      const response = await fetch(`http://localhost:8000/api/reports/${report.id}/fhir`);
+      if (!response.ok) throw new Error('FHIR export unavailable');
+      const blob = new Blob([JSON.stringify(await response.json(), null, 2)], { type: 'application/fhir+json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `aquaalert-AQA-${report.id}-observation.json`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } finally {
+      setExporting(false);
+    }
+  };
+  const shareResolvedCard = async () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1200; canvas.height = 630;
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    context.fillStyle = '#071c2a'; context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = '#54e1d2'; context.font = 'bold 54px sans-serif'; context.fillText('AquaAlert · Resolved', 70, 130);
+    context.fillStyle = '#f5fbff'; context.font = '32px sans-serif'; context.fillText(`Case AQA-${report.id}: ${report.issue_type}`, 70, 220);
+    context.fillStyle = '#9bb5c4'; context.font = '24px sans-serif'; context.fillText('Community observation → human review → action taken', 70, 290);
+    const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+    if (!blob) return;
+    const file = new File([blob], `aquaalert-AQA-${report.id}-resolved.png`, { type: 'image/png' });
+    if (navigator.share && navigator.canShare?.({ files: [file] })) await navigator.share({ title: 'AquaAlert resolved case', files: [file] });
+    else { const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = file.name; link.click(); URL.revokeObjectURL(link.href); }
+  };
 
   let rules = [];
   try { rules = JSON.parse(report.rules_triggered_json || '[]'); } catch {}
@@ -43,6 +72,8 @@ export const ReportDetail = () => {
           <h1 className="text-2xl font-display font-bold">Case AQA-{report.id}</h1>
           <p className="text-sm text-white/50">{new Date(report.created_at).toLocaleString()}</p>
         </div>
+        {report.status === 'Verified' && <div className="mb-6 rounded-xl border border-glow-aqua/30 bg-glow-aqua/5 p-4"><button onClick={() => void downloadFhir()} disabled={exporting} className="rounded-lg bg-glow-aqua px-3 py-2 text-sm font-semibold text-ink-navy disabled:opacity-50">{exporting ? 'Preparing…' : 'Download FHIR Observation JSON'}</button><p className="mt-2 text-xs text-white/50">Illustrative mapping for researchers; this is not a clinical record.</p></div>}
+        {report.status === 'Resolved' && <div className="mb-6 rounded-xl border border-health-lime/30 bg-health-lime/5 p-4"><p className="text-sm font-semibold text-health-lime">Resolved — thank you for helping close the loop.</p><button onClick={() => void shareResolvedCard()} className="mt-3 rounded-lg bg-health-lime px-3 py-2 text-sm font-semibold text-ink-navy">Share resolved-case card</button></div>}
         <StatusBadge status={report.status as any} />
       </div>
 
@@ -87,7 +118,7 @@ export const ReportDetail = () => {
 
       <h2 className="text-lg font-bold mb-4 flex items-center gap-2"><ShieldCheck size={18}/> Rules Engine</h2>
       <div className="space-y-2 mb-8">
-        {rules.length > 0 ? rules.map((r: str, i: number) => (
+        {rules.length > 0 ? rules.map((r: string, i: number) => (
           <div key={i} className="bg-deep-teal/20 border border-white/10 rounded-lg p-3 text-sm">
             {r}
           </div>

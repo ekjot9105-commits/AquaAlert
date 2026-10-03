@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Stepper } from '../../ui/Stepper';
 import { CaptureStep } from './steps/CaptureStep';
 import { PlaceStep } from './steps/PlaceStep';

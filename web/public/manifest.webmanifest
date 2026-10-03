@@ -1,0 +1,10 @@
+{
+  "name": "AquaAlert Water Guardians",
+  "short_name": "AquaAlert",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071c2a",
+  "theme_color": "#071c2a",
+  "description": "Safe community observations for healthier watersheds.",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

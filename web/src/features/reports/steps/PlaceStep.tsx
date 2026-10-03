@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Button } from '../../../ui/Button';
-import { ReportDraft } from '../ReportWizard';
+import type { ReportDraft } from '../ReportWizard';
 import { fetchWaterBodies } from '../../../services/api';
 import { MapPin, Navigation } from 'lucide-react';
 
@@ -31,7 +31,7 @@ const LocationMarker = ({ position, setPosition }: { position: [number, number],
   return <Marker position={position} draggable={true} eventHandlers={{ dragend: (e) => setPosition([e.target.getLatLng().lat, e.target.getLatLng().lng]) }} />;
 };
 
-export const PlaceStep: React.FC<Props> = ({ draft, updateDraft, onNext, onBack }) => {
+export const PlaceStep = ({ draft, updateDraft, onNext, onBack }: Props) => {
   const [position, setPosition] = useState<[number, number]>(draft.lat && draft.lng ? [draft.lat, draft.lng] : [40.0, -73.0]);
   const [waterBodies, setWaterBodies] = useState<any[]>([]);
   const [nearest, setNearest] = useState<any>(null);
@@ -55,7 +55,7 @@ export const PlaceStep: React.FC<Props> = ({ draft, updateDraft, onNext, onBack 
     if (waterBodies.length > 0) {
       // Find nearest
       let min = Infinity;
-      let closest = null;
+      let closest: any = null;
       waterBodies.forEach(wb => {
         const dist = Math.pow(wb.center_lat - position[0], 2) + Math.pow(wb.center_lng - position[1], 2);
         if (dist < min) {

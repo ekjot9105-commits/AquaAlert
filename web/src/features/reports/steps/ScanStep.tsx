@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../../../ui/Button';
-import { ReportDraft } from '../ReportWizard';
+import type { ReportDraft } from '../ReportWizard';
 import { aiAssess } from '../../../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PriorityBadge } from '../../../ui/PriorityBadge';
-import { Info, ScanLine, AlertCircle } from 'lucide-react';
+import { Info, AlertCircle } from 'lucide-react';
 
 interface Props {
   draft: ReportDraft;
@@ -13,7 +13,7 @@ interface Props {
   onBack: () => void;
 }
 
-export const ScanStep: React.FC<Props> = ({ draft, updateDraft, onNext, onBack }) => {
+export const ScanStep = ({ draft, updateDraft, onNext, onBack }: Props) => {
   const [analyzing, setAnalyzing] = useState(true);
   const [error, setError] = useState(false);
   const [result, setResult] = useState<any>(null);

@@ -1,6 +1,5 @@
-import React from 'react';
 import { Button } from '../../../ui/Button';
-import { ReportDraft } from '../ReportWizard';
+import type { ReportDraft } from '../ReportWizard';
 import { cn } from '../../../utils/cn';
 import { AlertTriangle, Trash2, Droplets, Leaf, Activity, Wind, HelpCircle, CheckCircle } from 'lucide-react';
 
@@ -22,7 +21,7 @@ const CATEGORIES = [
   { id: 'Other', icon: HelpCircle },
 ];
 
-export const DescribeStep: React.FC<Props> = ({ draft, updateDraft, onNext, onBack }) => {
+export const DescribeStep = ({ draft, updateDraft, onNext, onBack }: Props) => {
   return (
     <div className="flex flex-col flex-1">
       <div className="bg-alert-coral/10 border border-alert-coral/30 rounded-xl p-3 mb-6 flex items-start gap-3">

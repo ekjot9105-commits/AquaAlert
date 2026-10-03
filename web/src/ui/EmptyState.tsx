@@ -1,8 +1,7 @@
-import React from 'react';
-import { cn } from '../utils/cn';
+import type { ComponentType, ReactNode } from 'react';
 import { Inbox } from 'lucide-react';
 
-export const EmptyState = ({ title, description, icon: Icon = Inbox, action }: { title: string, description: string, icon?: React.ElementType, action?: React.ReactNode }) => {
+export const EmptyState = ({ title, description, icon: Icon = Inbox, action }: { title: string, description: string, icon?: ComponentType<{ size?: number }>, action?: ReactNode }) => {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
       <div className="w-16 h-16 mb-4 rounded-full bg-deep-teal flex items-center justify-center text-glow-aqua">

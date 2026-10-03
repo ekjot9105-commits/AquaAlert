@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '../utils/cn';
 import { CheckCircle, AlertTriangle, AlertOctagon, Info } from 'lucide-react';
 

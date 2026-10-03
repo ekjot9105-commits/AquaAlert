@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '../../../ui/Button';
-import { Camera, Image as ImageIcon, Upload } from 'lucide-react';
-import { ReportDraft } from '../ReportWizard';
+import { Camera } from 'lucide-react';
+import type { ReportDraft } from '../ReportWizard';
 
 interface Props {
   draft: ReportDraft;
@@ -9,7 +9,7 @@ interface Props {
   onNext: () => void;
 }
 
-export const CaptureStep: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
+export const CaptureStep = ({ draft, updateDraft, onNext }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(draft.evidenceB64 ? `data:image/jpeg;base64,${draft.evidenceB64}` : null);
   const [isProcessing, setIsProcessing] = useState(false);

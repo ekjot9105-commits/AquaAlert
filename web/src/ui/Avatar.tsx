@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '../utils/cn';
 
 export const Avatar = ({ src, alt, size = 'md', className }: { src?: string, alt?: string, size?: 'sm'|'md'|'lg', className?: string }) => {

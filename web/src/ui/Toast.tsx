@@ -1,5 +1,3 @@
-import React from 'react';
-import { cn } from '../utils/cn';
 import { CheckCircle, XCircle, Info, X } from 'lucide-react';
 
 export type ToastType = 'success' | 'error' | 'info';

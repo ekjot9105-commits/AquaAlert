@@ -1,10 +1,9 @@
-import React from 'react';
-import { cn } from '../utils/cn';
+import type { ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { GlassPanel } from './GlassPanel';
 
-export const Modal = ({ isOpen, onClose, title, children }: { isOpen: boolean, onClose: () => void, title: string, children: React.ReactNode }) => {
+export const Modal = ({ isOpen, onClose, title, children }: { isOpen: boolean, onClose: () => void, title: string, children: ReactNode }) => {
   return (
     <AnimatePresence>
       {isOpen && (

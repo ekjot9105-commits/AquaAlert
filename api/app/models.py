@@ -91,6 +91,7 @@ class CaseEvent(CaseEventBase, table=True):
 
 class EarlyWarningBase(SQLModel):
     water_body_id: int = Field(foreign_key="water_bodies.id")
+    responsible_unit_id: Optional[int] = Field(default=None, foreign_key="response_units.id")
     level: str # 'Watch', 'Warning', 'Alert'
     category: str
     reason_text: str
@@ -150,6 +151,15 @@ class Checkin(GamificationBase, table=True):
     water_body_id: int = Field(foreign_key="water_bodies.id")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+class StreamObservation(GamificationBase, table=True):
+    __tablename__ = "stream_observations"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="users.id")
+    water_body_id: int = Field(foreign_key="water_bodies.id")
+    observations_json: str = Field(default="{}")
+    quality_score: int = Field(default=0)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 class Notification(GamificationBase, table=True):
     __tablename__ = "notifications"
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -157,3 +167,12 @@ class Notification(GamificationBase, table=True):
     message: str
     is_read: bool = Field(default=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CommunityEvent(GamificationBase, table=True):
+    __tablename__ = "community_events"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    water_body_id: int = Field(foreign_key="water_bodies.id")
+    title: str
+    scheduled_for: datetime
+    created_by: int = Field(foreign_key="users.id")
+    participant_ids: str = Field(default="[]")
